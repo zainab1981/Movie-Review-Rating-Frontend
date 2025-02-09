@@ -1,6 +1,6 @@
 // API Configuration
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+  import.meta.env.VITE_API_BASE_URL || "https://movie-review-rating-backend.onrender.com/api";
 
 // API endpoints
 export const ENDPOINTS = {
