@@ -133,7 +133,6 @@ function Home() {
 const styles = {
   container: {
     padding: "2rem",
-    
     margin: "0 auto",
     minHeight: "100vh",
   },

@@ -15,6 +15,24 @@ function MovieDetails() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Just now';
+    
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'Just now';
+      
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Just now';
+    }
+  };
+
   useEffect(() => {
     const fetchMovieAndReviews = async () => {
       try {
@@ -40,12 +58,17 @@ function MovieDetails() {
     try {
       const response = await apiClient.createReview(id, {
         rating,
-        reviewText: review, // Changed from 'comment' to 'reviewText' to match backend
+        reviewText: review,
       });
 
       // Update reviews state with the new review
       if (response.review) {
-        setReviews((prev) => [...prev, response.review]);
+        // Add current date if the server doesn't provide one
+        const newReview = {
+          ...response.review,
+          createdAt: response.review.createdAt || new Date().toISOString()
+        };
+        setReviews((prev) => [...prev, newReview]);
         setReview("");
         setRating(5);
       }
@@ -245,7 +268,7 @@ function MovieDetails() {
                     color: "var(--text-secondary)",
                   }}
                 >
-                  {new Date(review.createdAt).toLocaleDateString()}
+                  {formatDate(review.createdAt)}
                 </div>
               </div>
               <div style={styles.reviewRating}>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { isDarkMode } = useTheme();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -28,9 +30,21 @@ function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.formCard}>
-        <h2 style={styles.title}>Login</h2>
+    <div style={{
+      ...styles.container,
+      backgroundColor: isDarkMode ? 'var(--bg-secondary)' : '#f5f5f5',
+    }}>
+      <div style={{
+        ...styles.formCard,
+        backgroundColor: isDarkMode ? 'var(--bg-primary)' : 'white',
+        boxShadow: isDarkMode 
+          ? '0 2px 4px rgba(0, 0, 0, 0.2)'
+          : '0 2px 4px rgba(0, 0, 0, 0.1)',
+      }}>
+        <h2 style={{
+          ...styles.title,
+          color: 'var(--text-primary)',
+        }}>Login</h2>
         {error && <div style={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit} style={styles.form}>
           <input
@@ -38,7 +52,12 @@ function Login() {
             placeholder="Email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            style={styles.input}
+            style={{
+              ...styles.input,
+              backgroundColor: isDarkMode ? 'var(--bg-secondary)' : 'white',
+              borderColor: 'var(--border-color)',
+              color: 'var(--text-primary)',
+            }}
             required
           />
           <input
@@ -46,14 +65,22 @@ function Login() {
             placeholder="Password"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            style={styles.input}
+            style={{
+              ...styles.input,
+              backgroundColor: isDarkMode ? 'var(--bg-secondary)' : 'white',
+              borderColor: 'var(--border-color)',
+              color: 'var(--text-primary)',
+            }}
             required
           />
           <button type="submit" style={styles.button} disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        <p style={styles.text}>
+        <p style={{
+          ...styles.text,
+          color: 'var(--text-secondary)',
+        }}>
           Don't have an account? <Link to="/register" style={styles.link}>Register</Link>
         </p>
       </div>
@@ -67,20 +94,19 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    backgroundColor: '#f5f5f5',
+    transition: 'background-color 0.3s ease',
   },
   formCard: {
-    backgroundColor: 'white',
     padding: '2rem',
     borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     width: '100%',
     maxWidth: '400px',
+    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
   },
   title: {
     textAlign: 'center',
     marginBottom: '2rem',
-    color: '#333',
+    transition: 'color 0.3s ease',
   },
   form: {
     display: 'flex',
@@ -90,8 +116,12 @@ const styles = {
   input: {
     padding: '0.75rem',
     borderRadius: '4px',
-    border: '1px solid #ddd',
+    border: '1px solid',
     fontSize: '1rem',
+    transition: 'background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease',
+    '&::placeholder': {
+      color: 'var(--text-secondary)',
+    },
   },
   button: {
     padding: '0.75rem',
@@ -103,11 +133,12 @@ const styles = {
     fontSize: '1rem',
     marginTop: '1rem',
     opacity: props => props.disabled ? 0.7 : 1,
+    transition: 'opacity 0.3s ease',
   },
   text: {
     textAlign: 'center',
     marginTop: '1rem',
-    color: '#666',
+    transition: 'color 0.3s ease',
   },
   link: {
     color: '#646cff',

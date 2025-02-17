@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { apiClient } from "../config/api";
 
@@ -39,6 +39,15 @@ function AdminDashboard() {
     "Thriller",
     "Western",
   ];
+
+  const formRef = useRef(null);
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'center'
+    });
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -124,6 +133,7 @@ function AdminDashboard() {
   const handleEdit = (movie) => {
     setEditingMovie(movie);
     setIsEditing(true);
+    setTimeout(() => scrollToForm(), 100);
   };
 
   const handleDelete = async (movieId) => {
@@ -152,7 +162,7 @@ function AdminDashboard() {
     >
       <div style={styles.content}>
         <h1 style={{ ...styles.title, color: "var(--text-primary)" }}>
-          Admin Dashboard
+          Admin
         </h1>
 
         {error && <div style={styles.error}>{error}</div>}
@@ -246,7 +256,11 @@ function AdminDashboard() {
           <h2 style={{ ...styles.subtitle, color: "var(--text-primary)" }}>
             {isEditing ? "Edit Movie" : "Add New Movie"}
           </h2>
-          <form onSubmit={handleSubmit} style={styles.form}>
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            style={styles.form}
+          >
             {/* Form fields */}
             <div style={styles.formGroup}>
               <label style={{ ...styles.label, color: "var(--text-primary)" }}>
